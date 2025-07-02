@@ -31,40 +31,46 @@ onUnmounted(() => {
 <template>
   <UCard>
     <template #header>
-      <div class="flex justify-between">
+      <header class="flex justify-between">
         <div>
           <h3 class="text-xl font-bold flex gap-2 items-center">
             <UAvatar :text="symbol.slice(0, 2)" size="sm" />
             {{ symbol }}
           </h3>
-          <p>
-            Price:
-            <span
-              class="font-medium"
-              :class="{
-                'text-green-500': data.priceChange === PriceChangeType.UP,
-                'text-red-500': data.priceChange === PriceChangeType.DOWN,
-              }"
-              >{{ data.price }}</span
-            >
-          </p>
-          <p>
-            Price change(24h):
-            <span
-              class="font-medium"
-              :class="{
-                'text-green-500': data.priceChangePercent > 0,
-                'text-red-500': data.priceChangePercent < 0,
-              }"
-              >{{ data.priceChangePercent }}%</span
-            >
-          </p>
+
+          <dl class="mt-2 space-y-1">
+            <div>
+              <dt class="inline font-normal mr-2">Price:</dt>
+              <dd
+                class="inline font-medium"
+                :class="{
+                  'text-green-500': data.priceChange === PriceChangeType.UP,
+                  'text-red-500': data.priceChange === PriceChangeType.DOWN,
+                }"
+              >
+                {{ data.price }}
+              </dd>
+            </div>
+
+            <div>
+              <dt class="inline font-normal mr-2">Price change (24h):</dt>
+              <dd
+                class="inline font-medium"
+                :class="{
+                  'text-green-500': data.priceChangePercent > 0,
+                  'text-red-500': data.priceChangePercent < 0,
+                }"
+              >
+                {{ data.priceChangePercent }}%
+              </dd>
+            </div>
+          </dl>
         </div>
 
-        <UButton class="cursor-pointer" color="error" @click="emit('remove', symbol)">
+        <UButton class="cursor-pointer h-[30px]" color="error" @click="emit('remove', symbol)">
           <Icon name="material-symbols-light:close" />
         </UButton>
-      </div>
+      </header>
     </template>
 
     <div class="relative">

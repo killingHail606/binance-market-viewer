@@ -20,7 +20,7 @@ export const useMarketStore = defineStore('market', () => {
 
   const savingDataInterval = 60 * 1000 // 60s in ms
 
-  // Remove a selected pair from list and stop receiving its data
+  // Remove a selected pair from a list and stop receiving its data
   function removePair(symbol: string) {
     selectedSymbols.value = selectedSymbols.value.filter((item) => item !== symbol)
     delete tickers.value[symbol]
@@ -48,6 +48,7 @@ export const useMarketStore = defineStore('market', () => {
     }
   }
 
+  // Update or initialize ticker data from socket
   function handleTickerSocketData(data: TickerSocketFormatted) {
     if (tickers.value[data.symbol]) {
       tickers.value[data.symbol].price = data.price
@@ -62,6 +63,7 @@ export const useMarketStore = defineStore('market', () => {
     }
   }
 
+  // Update candlestick data and trim old entries
   function handleCandlestickSocketData(data: CandlestickSocketFormatted) {
     if (tickers.value[data.symbol]) {
       const candlestickData = tickers.value[data.symbol].candlestick
@@ -86,6 +88,7 @@ export const useMarketStore = defineStore('market', () => {
     }
   }
 
+  // Init candlestick socket with selected symbols
   function initCandleStickSockets() {
     socketControlCandlestick?.disconnect()
     socketControlCandlestick = useBinanceCandlestickSocket(selectedSymbols.value, handleCandlestickSocketData)
@@ -93,6 +96,7 @@ export const useMarketStore = defineStore('market', () => {
     setTimeout(() => socketControlCandlestick?.connect(), 100)
   }
 
+  // Init ticker socket with selected symbols
   function initTickerSockets() {
     socketControlTicker?.disconnect()
     socketControlTicker = useBinanceTickerSocket(selectedSymbols.value, handleTickerSocketData)
@@ -103,7 +107,7 @@ export const useMarketStore = defineStore('market', () => {
   watch(
     selectedSymbols,
     (newSymbols, oldSymbols) => {
-      // Also delete from selected ticker
+      // Also delete it from selected tickers
       const removedSymbols = oldSymbols?.filter((val) => !newSymbols.includes(val)) || []
       removedSymbols.forEach((symbol) => delete tickers.value[symbol])
 
